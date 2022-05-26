@@ -26,7 +26,7 @@ public class AccountService {
 		account.setBalance( account.getBalance() + event.getAmount() );
 		update( account );
 
-		return mountJson("destination", account);
+		return "\"destination\": " + mountJson(account );
 	}
 
 	public String withdraw(Event event) {
@@ -42,7 +42,7 @@ public class AccountService {
 		account.setBalance( account.getBalance() - event.getAmount() );
 		update( account );
 
-		return mountJson("origin", account);
+		return "\"origin\": " + mountJson(account);
 	}
 
 	public String transfer(Event event) throws JSONException {
@@ -57,8 +57,8 @@ public class AccountService {
 		return strTransfer;
 	}
 
-	public String mountJson(String type, Account account) {
-		String jsonStr  = "{\""+type+"\":{\"id\":\""+ account.getNumber() + "\", \"balance\":"+ account.getBalance() +"}}";
+	public String mountJson(Account account) {
+		String jsonStr  = "{\"id\":\""+ account.getNumber() + "\", \"balance\":"+ account.getBalance() +"}";
 
 		return jsonStr;
 	}

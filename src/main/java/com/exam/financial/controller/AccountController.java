@@ -44,14 +44,14 @@ public class AccountController {
 					if (event.getDestination() == 0)
 						return new ResponseEntity<>("Destination Account is empty", HttpStatus.BAD_REQUEST);
 
-					returnEvent = service.deposit(event);
+					returnEvent = "{" + service.deposit(event) + "}";
 					break;
 
 				case "WITHDRAW":
 					if (event.getOrigin() == 0)
 						return new ResponseEntity<>("Origin Account is empty", HttpStatus.BAD_REQUEST);
 
-					returnEvent = service.withdraw(event);
+					returnEvent = "{" + service.withdraw(event) + "}";
 					break;
 
 				case "TRANSFER":
