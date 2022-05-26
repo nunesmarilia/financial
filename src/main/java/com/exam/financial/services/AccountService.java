@@ -46,11 +46,19 @@ public class AccountService {
 	}
 
 	public String transfer(Event event) throws JSONException {
+		Account account = findById( event.getOrigin() );
+		if ( account == null ){
+			return null;
+		}
+
+		if( event.getOrigin().intValue() == event.getDestination().intValue() )
+			return "{\"message\":\"Same destination and origin account\"}";
+
+		if( event.getAmount() > account.getBalance() )
+			return "{\"message\":\"Insufficient funds\"}";
+
 		String strDeposit  = deposit( event );
 		String strWithdraw = withdraw( event );
-
-		if( strWithdraw == null )
-			return null;
 
 		String strTransfer = "{"+ strWithdraw +","+ strDeposit +"}";
 
