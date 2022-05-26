@@ -53,6 +53,9 @@ public class AccountService {
 		JSONObject jsonDeposit  = deposit( event );
 		JSONObject jsonWithdraw = withdraw( event );
 
+		if( jsonWithdraw == null )
+			return null;
+
 		jsonTransfer.put("destination", jsonDeposit.get("destination"));
 		jsonTransfer.put("origin", jsonWithdraw.get("origin"));
 
