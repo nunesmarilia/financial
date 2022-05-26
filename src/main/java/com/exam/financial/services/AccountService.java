@@ -48,11 +48,6 @@ public class AccountService {
 	}
 
 	public JSONObject transfer(Event event) throws JSONException {
-		Account accountDestination = findById( event.getDestination() );
-		if ( accountDestination == null ){
-			return null;
-		}
-
 		JSONObject jsonTransfer = new JSONObject();
 
 		JSONObject jsonDeposit  = deposit( event );
