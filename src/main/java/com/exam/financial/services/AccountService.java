@@ -15,7 +15,7 @@ public class AccountService {
 	@Autowired
 	AccountRepository repository;
 
-	public JSONObject deposit(Event event) throws JSONException {
+	public String deposit(Event event) throws JSONException {
 		Account account = findById( event.getDestination() );
 		if ( account == null ){
 			account = new Account();
@@ -29,16 +29,14 @@ public class AccountService {
 		return mountJson("destination", account);
 	}
 
-	public JSONObject withdraw(Event event) throws JSONException {
+	public String withdraw(Event event) {
 		Account account = findById( event.getOrigin() );
 		if ( account == null ){
 			return null;
 		}
 
 		if( event.getAmount() > account.getBalance() ){
-			JSONObject jsonBalance  = new JSONObject();
-			jsonBalance.put("message", "Insufficient funds");
-			return jsonBalance;
+			return "{\"message\":\"Insufficient funds\"}";
 		}
 
 		account.setBalance( account.getBalance() - event.getAmount() );
@@ -47,31 +45,22 @@ public class AccountService {
 		return mountJson("origin", account);
 	}
 
-	public JSONObject transfer(Event event) throws JSONException {
-		JSONObject jsonTransfer = new JSONObject();
+	public String transfer(Event event) throws JSONException {
+		String strDeposit  = deposit( event );
+		String strWithdraw = withdraw( event );
 
-		JSONObject jsonDeposit  = deposit( event );
-		JSONObject jsonWithdraw = withdraw( event );
-
-		if( jsonWithdraw == null )
+		if( strWithdraw == null )
 			return null;
 
-		jsonTransfer.put("destination", jsonDeposit.get("destination"));
-		jsonTransfer.put("origin", jsonWithdraw.get("origin"));
+		String strTransfer = "{"+ strWithdraw +","+ strDeposit +"}";
 
-		return jsonTransfer;
+		return strTransfer;
 	}
 
-	public JSONObject mountJson(String type, Account account) throws JSONException {
-		JSONObject jsonAccount  = new JSONObject();
+	public String mountJson(String type, Account account) {
+		String jsonStr  = "{\""+type+"\":{\"id\":\""+ account.getNumber() + "\", \"balance\":"+ account.getBalance() +"}}";
 
-		jsonAccount.put("id", account.getNumber() );
-		jsonAccount.put("balance", account.getBalance() );
-
-		JSONObject jsonMount = new JSONObject();
-		jsonMount.putOpt(type, jsonAccount);
-
-		return jsonMount;
+		return jsonStr;
 	}
 
 	public Account add(Account account){

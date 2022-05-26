@@ -36,7 +36,7 @@ public class AccountController {
 
 	@PostMapping("/event")
 	public ResponseEntity<String> event(@RequestBody Event event) {
-		JSONObject returnEvent;
+		String returnEvent;
 
 		try {
 			switch ( event.getType().toUpperCase() ) {
@@ -70,7 +70,7 @@ public class AccountController {
 		}
 
 		if (returnEvent != null)
-			return new ResponseEntity<>(returnEvent.toString(), HttpStatus.CREATED);
+			return new ResponseEntity<>(returnEvent, HttpStatus.CREATED);
 		else
 			return new ResponseEntity<>("0", HttpStatus.NOT_FOUND);
 	}
