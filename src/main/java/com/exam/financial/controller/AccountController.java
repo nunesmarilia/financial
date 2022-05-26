@@ -2,7 +2,6 @@ package com.exam.financial.controller;
 
 import com.exam.financial.services.AccountService;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.exam.financial.model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +43,16 @@ public class AccountController {
 					if (event.getDestination() == 0)
 						return new ResponseEntity<>("Destination Account is empty", HttpStatus.BAD_REQUEST);
 
-					returnEvent = "{" + service.deposit(event) + "}";
+					String returnDeposit    = service.deposit(event);
+					returnEvent             = returnDeposit != null? "{" + returnDeposit + "}": null;
 					break;
 
 				case "WITHDRAW":
 					if (event.getOrigin() == 0)
 						return new ResponseEntity<>("Origin Account is empty", HttpStatus.BAD_REQUEST);
 
-					returnEvent = "{" + service.withdraw(event) + "}";
+					String returnWithdraw   = service.withdraw(event);
+					returnEvent             = returnWithdraw != null ? "{" + returnWithdraw + "}": null;
 					break;
 
 				case "TRANSFER":
