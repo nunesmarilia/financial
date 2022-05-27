@@ -81,7 +81,7 @@ class ExamFinancialAccountApplicationTests {
 		ResponseEntity<String> result = restTemplate.postForEntity(baseUrl, request, String.class);
 
 		Assert.assertEquals(201, result.getStatusCodeValue());
-		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"destination\": {\"id\":\"100\", \"balance\":10}}"));
+		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"destination\":{\"id\":\"100\",\"balance\":10}}"));
 	}
 
 	@Test
@@ -106,7 +106,7 @@ class ExamFinancialAccountApplicationTests {
 		ResponseEntity<String> result = restTemplate.postForEntity(baseUrl+"/event", request, String.class);
 
 		Assert.assertEquals(201, result.getStatusCodeValue());
-		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"destination\": {\"id\":\"100\", \"balance\":20}}"));
+		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"destination\":{\"id\":\"100\",\"balance\":20}}"));
 	}
 
 	@Test
@@ -261,7 +261,7 @@ class ExamFinancialAccountApplicationTests {
 		ResponseEntity<String> result = restTemplate.postForEntity(baseUrl+"/event", request, String.class);
 
 		Assert.assertEquals(201, result.getStatusCodeValue());
-		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"origin\": {\"id\":\"100\", \"balance\":15}}"));
+		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"origin\":{\"id\":\"100\",\"balance\":15}}"));
 	}
 
 	@Test
@@ -410,7 +410,7 @@ class ExamFinancialAccountApplicationTests {
 		ResponseEntity<String> result = restTemplate.postForEntity(baseUrl+"/event", request, String.class);
 
 		Assert.assertEquals(201, result.getStatusCodeValue());
-		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"origin\": {\"id\":\"100\", \"balance\":0},\"destination\": {\"id\":\"300\", \"balance\":15}}"));
+		Assert.assertTrue(result.getBody() != null && result.getBody().equals("{\"origin\":{\"id\":\"100\",\"balance\":0},\"destination\":{\"id\":\"300\",\"balance\":15}}"));
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package com.exam.financial.controller;
 
+import com.exam.financial.dto.ReturnEvent;
 import com.exam.financial.services.AccountService;
 
 import com.exam.financial.model.Event;
@@ -34,48 +35,14 @@ public class AccountController {
 
 	@PostMapping("/event")
 	public ResponseEntity<String> event(@RequestBody Event event) {
-		String returnEvent;
+		ReturnEvent returnEvent = service.event(event);
 
-		switch ( event.getType().toUpperCase() ) {
-			case "DEPOSIT":
-				if (event.getDestination() != null && !event.getDestination().isEmpty()) {
-					String returnDeposit = service.deposit(event);
-					returnEvent = returnDeposit != null ? "{" + returnDeposit + "}" : null;
-					break;
+		if (returnEvent.getMessageError() != null && !returnEvent.getMessageError().isEmpty())
+			return new ResponseEntity<>(returnEvent.getMessageError(), HttpStatus.BAD_REQUEST);
 
-				} else {
-					return new ResponseEntity<>("Destination Account is empty", HttpStatus.BAD_REQUEST);
-				}
+		if (returnEvent.getMessageNotFound() != null && !returnEvent.getMessageNotFound().isEmpty())
+			return new ResponseEntity<>(returnEvent.getMessageNotFound(), HttpStatus.NOT_FOUND);
 
-			case "WITHDRAW":
-				if (event.getOrigin() != null && !event.getOrigin().isEmpty()) {
-					String returnWithdraw = service.withdraw(event);
-					returnEvent = returnWithdraw != null ? "{" + returnWithdraw + "}" : null;
-					break;
-
-				} else {
-					return new ResponseEntity<>("Origin Account is empty", HttpStatus.BAD_REQUEST);
-				}
-
-			case "TRANSFER":
-				if ((event.getDestination() != null && !event.getDestination().isEmpty()) && (event.getOrigin() != null && !event.getOrigin().isEmpty())) {
-					returnEvent = service.transfer(event);
-					break;
-
-				} else {
-					return new ResponseEntity<>("Destination Account is empty or Origin Account is empty", HttpStatus.BAD_REQUEST);
-				}
-
-			default:
-				return new ResponseEntity<>( "Invalid transaction option", HttpStatus.BAD_REQUEST);
-		}
-
-		if (returnEvent == null)
-			return new ResponseEntity<>("0", HttpStatus.NOT_FOUND);
-		else if (!returnEvent.equalsIgnoreCase("{}")) {
-			return new ResponseEntity<>(returnEvent, HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<>("{\"message\":\"Insufficient funds\"}", HttpStatus.BAD_REQUEST);
-		}
+		return new ResponseEntity<>(returnEvent.getMessageSucess(), HttpStatus.CREATED);
 	}
 }

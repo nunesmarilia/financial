@@ -18,9 +18,8 @@ public class AccountRepository {
 		return account;
 	}
 
-	public Account update(Account account) {
+	public void update(Account account) {
 		accounts.set(account.getId().intValue() - 1, account);
-		return account;
 	}
 
 	public Account findById(String number) {

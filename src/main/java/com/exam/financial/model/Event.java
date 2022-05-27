@@ -4,14 +4,10 @@ import java.util.Objects;
 
 public class Event {
 
-	private String destination;
-	private String origin;
-	private int amount;
-	private String type;
-
-	public Event() {
-
-	}
+	private final String destination;
+	private final String origin;
+	private final int amount;
+	private final String type;
 
 	public Event(String type, String destination, String origin, int amount) {
 		this.type           = type;
