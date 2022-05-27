@@ -23,13 +23,9 @@ public class AccountRepository {
 		return account;
 	}
 
-	public Account findById(Long number) {
+	public Account findById(String number) {
 		Optional<Account> account = accounts.stream().filter(a -> a.getNumber().equals(number)).findFirst();
 		return account.orElse(null);
-	}
-
-	public void delete(Long id) {
-		accounts.remove(id.intValue());
 	}
 
 	public void deleteAll() {

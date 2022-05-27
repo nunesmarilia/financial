@@ -5,17 +5,8 @@ import java.util.Objects;
 public class Account {
 
 	private Long id;
-	private Long number;
+	private String number;
 	private int balance;
-
-	public Account() {
-
-	}
-
-	public Account(Long number, int balance) {
-		this.number = number;
-		this.balance = balance;
-	}
 
 	public Long getId() {
 		return id;
@@ -25,11 +16,11 @@ public class Account {
 		this.id = id;
 	}
 
-	public Long getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(Long number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

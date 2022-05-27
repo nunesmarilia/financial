@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Event {
 
-	private Long destination;
-	private Long origin;
+	private String destination;
+	private String origin;
 	private int amount;
 	private String type;
 
@@ -13,35 +13,27 @@ public class Event {
 
 	}
 
-	public Long getDestination() {
+	public Event(String type, String destination, String origin, int amount) {
+		this.type           = type;
+		this.destination    = destination;
+		this.amount         = amount;
+		this.origin     = origin;
+	}
+
+	public String getDestination() {
 		return destination;
 	}
 
-	public void setDestination(Long destination) {
-		this.destination = destination;
-	}
-
-	public Long getOrigin() {
+	public String getOrigin() {
 		return origin;
-	}
-
-	public void setOrigin(Long origin) {
-		this.origin = origin;
 	}
 
 	public int getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
 	public String getType() {
 		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.exam.financial.controller;
 
 import com.exam.financial.services.AccountService;
-import org.json.JSONException;
 
 import com.exam.financial.model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class AccountController {
 	}
 
 	@GetMapping("/balance")
-	public ResponseEntity<String> balance(@RequestParam("account_id") Long number) {
+	public ResponseEntity<String> balance(@RequestParam("account_id") String number) {
 
 		Account account = service.findById( number );
 		if (account == null)
@@ -37,42 +36,46 @@ public class AccountController {
 	public ResponseEntity<String> event(@RequestBody Event event) {
 		String returnEvent;
 
-		try {
-			switch ( event.getType().toUpperCase() ) {
-				case "DEPOSIT":
-					if (event.getDestination() == 0)
-						return new ResponseEntity<>("Destination Account is empty", HttpStatus.BAD_REQUEST);
-
-					String returnDeposit    = service.deposit(event);
-					returnEvent             = returnDeposit != null? "{" + returnDeposit + "}": null;
+		switch ( event.getType().toUpperCase() ) {
+			case "DEPOSIT":
+				if (event.getDestination() != null && !event.getDestination().isEmpty()) {
+					String returnDeposit = service.deposit(event);
+					returnEvent = returnDeposit != null ? "{" + returnDeposit + "}" : null;
 					break;
 
-				case "WITHDRAW":
-					if (event.getOrigin() == 0)
-						return new ResponseEntity<>("Origin Account is empty", HttpStatus.BAD_REQUEST);
+				} else {
+					return new ResponseEntity<>("Destination Account is empty", HttpStatus.BAD_REQUEST);
+				}
 
-					String returnWithdraw   = service.withdraw(event);
-					returnEvent             = returnWithdraw != null ? "{" + returnWithdraw + "}": null;
+			case "WITHDRAW":
+				if (event.getOrigin() != null && !event.getOrigin().isEmpty()) {
+					String returnWithdraw = service.withdraw(event);
+					returnEvent = returnWithdraw != null ? "{" + returnWithdraw + "}" : null;
 					break;
 
-				case "TRANSFER":
-					if (event.getDestination() == 0 || event.getOrigin() == 0)
-						return new ResponseEntity<>("Destination Account is empty or Origin Account is empty", HttpStatus.BAD_REQUEST);
+				} else {
+					return new ResponseEntity<>("Origin Account is empty", HttpStatus.BAD_REQUEST);
+				}
 
+			case "TRANSFER":
+				if ((event.getDestination() != null && !event.getDestination().isEmpty()) && (event.getOrigin() != null && !event.getOrigin().isEmpty())) {
 					returnEvent = service.transfer(event);
 					break;
 
-				default:
-					return new ResponseEntity<>( "Invalid transaction option", HttpStatus.BAD_REQUEST);
-			}
+				} else {
+					return new ResponseEntity<>("Destination Account is empty or Origin Account is empty", HttpStatus.BAD_REQUEST);
+				}
 
-		} catch (JSONException e) {
-			return new ResponseEntity<>( "Process error", HttpStatus.BAD_REQUEST);
+			default:
+				return new ResponseEntity<>( "Invalid transaction option", HttpStatus.BAD_REQUEST);
 		}
 
-		if (returnEvent != null)
-			return new ResponseEntity<>(returnEvent, HttpStatus.CREATED);
-		else
+		if (returnEvent == null)
 			return new ResponseEntity<>("0", HttpStatus.NOT_FOUND);
+		else if (!returnEvent.equalsIgnoreCase("{}")) {
+			return new ResponseEntity<>(returnEvent, HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<>("{\"message\":\"Insufficient funds\"}", HttpStatus.BAD_REQUEST);
+		}
 	}
 }
