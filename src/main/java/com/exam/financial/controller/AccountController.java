@@ -18,6 +18,12 @@ public class AccountController {
 
 	@PostMapping("/reset")
 	public ResponseEntity<String> reset() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		service.deleteAll();
 		return new ResponseEntity<>("OK" , HttpStatus.OK);
 	}
